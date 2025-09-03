@@ -3,6 +3,7 @@ import { saveOTP, getOTP, removeOTP, updateOtp } from "./otpStore";
 import { admin, db, auth } from "../firebase/index";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import { deleteFile } from "../routes/deleteFile";
 dotenv.config();
 import z from "zod";
 
@@ -74,7 +75,10 @@ export const verifyOtp = async (req: any, res: any) => {
   try {
     const { email, otp: userOtp } = req.body;
     const name = req.body.name ? req.body.name : "shraddha chaudhari";
-
+    const prf = req.body.publicId;
+    if (!prf) {
+      return res.status(404).json({ msg: "prf is not provided" });
+    }
     if (!email || !userOtp) {
       return res.status(400).json({ message: 'Provide email and OTP' });
     }
@@ -89,6 +93,7 @@ export const verifyOtp = async (req: any, res: any) => {
     const { otp, password, expiresAt } = record;
 
     if (Date.now() > expiresAt) {
+      deleteFile(prf);
       removeOTP(email);
       return res.status(410).json({ message: "OTP expired" });
     }
@@ -111,6 +116,7 @@ export const verifyOtp = async (req: any, res: any) => {
     const newUser = {
       name,
       email,
+      mediaUrl: prf,
       createdAt: admin.firestore.Timestamp.now(),
     };
     await db.collection('users').doc(user.uid).set(newUser);

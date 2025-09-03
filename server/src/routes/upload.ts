@@ -1,36 +1,44 @@
 import express, { Request, Response } from "express";
 import multer from "multer";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import dotenv from "dotenv";
+
+dotenv.config();
 const router = express.Router();
-import { fileURLToPath } from "url";
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+// Cloudinary config
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// Configure storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, "../uploads")); // store in /uploads
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    },
+// Multer storage using Cloudinary (TS-friendly)
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: async (req, file) => ({
+        folder: "truth_dare_uploads",
+        format: file.mimetype.split("/")[1],
+        public_id: `${Date.now()}-${file.originalname}`,
+    }),
 });
 
 const upload = multer({ storage });
 
 // Upload single file
 router.post("/", upload.single("file"), (req: Request, res: Response) => {
-    if (!req.file) {
-        console.log("hu");
-        return res.status(400).json({ message: "No file uploaded" });
-    }
-
-    const fileUrl = `/uploads/${req.file.filename}`;
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+    console.log("file submitted");
+    console.log(req.file.path);
     res.json({
         message: "File uploaded successfully",
-        fileUrl,
+        fileUrl: req.file.path,
+        publicId: req.file.filename, // direct Cloudinary URL
     });
 });
+
+
+
 
 export default router;

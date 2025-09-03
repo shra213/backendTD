@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/upload', uploadRouter);
-
+app.use('api/deleteFile', uploadRouter);
 
 app.use('/api/otp', otpRouter);
 app.use('/api/friends', verifyToken, friendRouter);
