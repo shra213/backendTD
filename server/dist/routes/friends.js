@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const friends_controller_1 = require("../controllers/friends.controller");
+const user_1 = require("../middlewares/user");
+const router = (0, express_1.Router)();
+router.route('/getUsers').get(user_1.verifyToken, friends_controller_1.getUsers);
+router.route('/sendreq').post(user_1.verifyToken, friends_controller_1.sendFriendReq);
+router.route("/acceptReq").post(user_1.verifyToken, friends_controller_1.acceptFriendReq);
+router.route("/sendMsg").post(user_1.verifyToken, friends_controller_1.sendMessage);
+router.route("/allFriends").get(user_1.verifyToken, friends_controller_1.getFriends);
+router.route("/getPendingReq").get(user_1.verifyToken, friends_controller_1.getPendingReq);
+exports.default = router;

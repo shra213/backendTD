@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const room_controller_1 = require("../controllers/room.controller");
+const game_1 = require("../middlewares/game");
+const router = (0, express_1.Router)();
+router.route('/createGame').post(room_controller_1.createGame);
+router.route('/joinGame').post(room_controller_1.joinGame);
+router.route('/rotateBottle').post(game_1.verifyPlayer, room_controller_1.rotateBottle);
+router.route('/choose').post(game_1.verifyPlayer, room_controller_1.selectTruthDare);
+router.route('/endTurn').delete(game_1.verifyPlayer, room_controller_1.endTurn);
+router.route('/exit').post(game_1.verifyPlayer, room_controller_1.exitGame);
+router.route('/getPlayers').post(game_1.verifyPlayer, room_controller_1.getPlayer);
+router.route('/terminate').post(game_1.verifyPlayer, room_controller_1.endgame);
+router.route('/game/status').get(room_controller_1.getGameStatus);
+router.route('/room/roomDetails').get(game_1.verifyPlayer, room_controller_1.roomDetails);
+router.route('/getRooms').get(room_controller_1.getRooms);
+exports.default = router;

@@ -1,0 +1,16 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+
+# Firebase service account key
+src/firebase/serviceAccountKey.json
+
+# OS files
+.DS_Store
+Thumbs.db
