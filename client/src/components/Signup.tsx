@@ -24,16 +24,7 @@ const Signup: React.FC = () => {
     }));
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePic(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
@@ -50,6 +41,7 @@ const Signup: React.FC = () => {
       const uploadData = await uploadRes.json();
       const fileUrl = uploadData.fileUrl;
       localStorage.setItem("publicId", uploadData.publicId);
+      setProfilePic(fileUrl);
       localStorage.setItem("prf", fileUrl);
       console.log(fileUrl);
     } catch (e) {
@@ -81,7 +73,7 @@ const Signup: React.FC = () => {
       // Save locally for OTP flow
       localStorage.setItem("verificationEmail", formData.email);
       localStorage.setItem("name", formData.name);
-
+      console.log(profilePic);
       localStorage.setItem(
         "pendingSignup",
         JSON.stringify({

@@ -3,7 +3,7 @@ import { saveOTP, getOTP, removeOTP, updateOtp } from "./otpStore";
 import { admin, db, auth } from "../firebase/index";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import { deleteFile } from "../routes/deleteFile";
+// import { deleteFile } from "../routes/deleteFile";
 dotenv.config();
 import z from "zod";
 
@@ -93,7 +93,7 @@ export const verifyOtp = async (req: any, res: any) => {
     const { otp, password, expiresAt } = record;
 
     if (Date.now() > expiresAt) {
-      deleteFile(prf);
+      // deleteFile(prf);
       removeOTP(email);
       return res.status(410).json({ message: "OTP expired" });
     }
