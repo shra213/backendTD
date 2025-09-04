@@ -37,8 +37,8 @@ const getUser = async (req, res) => {
 };
 exports.getUser = getUser;
 const updateProfile = async (req, res) => {
-    const { name, profile, birthdate, mediaUrl } = req.body;
-    if (!name && !profile && !birthdate && !mediaUrl) {
+    const { name, profile, birthdate, mediaUrl, publicId } = req.body;
+    if (!name && !profile && !birthdate && !mediaUrl && !publicId) {
         return res.status(400).json({ error: "No valid input provided" });
     }
     const userId = req.user.uid;
@@ -54,6 +54,8 @@ const updateProfile = async (req, res) => {
             updateData.birthdate = birthdate;
         if (mediaUrl !== undefined)
             updateData.mediaUrl = mediaUrl;
+        if (publicId !== undefined)
+            updateData.publicId = publicId;
         await userRef.update(updateData);
         return res.status(200).json({
             msg: "Profile updated successfully",

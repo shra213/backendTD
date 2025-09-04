@@ -13,6 +13,7 @@ cloudinary.config({
 // Delete file route
 router.delete("/delete-file", async (req, res) => {
     try {
+        console.log("hiii")
         const { publicId } = req.body; // send { "publicId": "foldername/filename" } in request body
         console.log("tried for deleting");
         if (!publicId) {
@@ -20,7 +21,7 @@ router.delete("/delete-file", async (req, res) => {
         }
 
         const result = await cloudinary.uploader.destroy(publicId);
-
+        console.log(res, "deleted");
         if (result.result === "not found") {
             return res.status(404).json({ error: "File not found" });
         }

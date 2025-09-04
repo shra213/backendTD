@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
     res.send('truth & dare Api running');
 });
 app.use('/api/upload', upload_1.default);
-// app.use('api/deleteFile', uploadRouter);
+app.use('/api', delete_1.default);
 app.use('/api/file', delete_1.default);
 app.use('/api/otp', otpRoutes_1.default);
 app.use('/api/friends', user_2.verifyToken, friends_1.default);

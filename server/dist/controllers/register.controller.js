@@ -20,17 +20,34 @@ const secret = process.env.JWT_SECRET;
 const emailSchema = zod_1.default.string().email();
 const sendOtp = async (req, res) => {
     try {
+        console.log("entered");
         const { email, password } = req.body;
+        // Validate email
         const suc = emailSchema.safeParse(email);
         if (!suc.success) {
-            return res.status(404).json({
-                msg: "Give a valid email"
-            });
+            return res.status(404).json({ msg: "Give a valid email" });
         }
         if (!email || !password) {
             return res.status(400).json({ message: 'Please provide email and password' });
         }
+        // Check if user already exists
+        try {
+            const userRecord = await index_1.auth.getUserByEmail(email);
+            if (userRecord) {
+                // console.log("error in deleting file");
+                return res.status(409).json({ message: "User already registered" });
+            }
+        }
+        catch (err) {
+            // If error.code === 'auth/user-not-found', proceed to OTP
+            if (err.code !== 'auth/user-not-found') {
+                console.error("Firebase error:", err);
+                return res.status(500).json({ message: "Failed to check user" });
+            }
+        }
+        // Generate OTP
         const otp = (0, otplogic_1.generateOtp)();
+        // Save OTP and send mail
         await (0, otpStore_1.saveOTP)(email, String(otp), password);
         await (0, otplogic_1.sendOtpMail)(email, otp);
         return res.status(200).json({ message: "OTP sent successfully" });
@@ -75,13 +92,16 @@ const verifyOtp = async (req, res) => {
     try {
         const { email, otp: userOtp } = req.body;
         const name = req.body.name ? req.body.name : "shraddha chaudhari";
-        const prf = req.body.publicId;
-        if (!prf) {
-            return res.status(404).json({ msg: "prf is not provided" });
+        const publicId = req.body.publicId;
+        const profileLink = req.body.profile || "";
+        if (!publicId) {
+            return res.status(404).json({ msg: "publicId is not provided" });
         }
         if (!email || !userOtp) {
             return res.status(400).json({ message: 'Provide email and OTP' });
         }
+        console.log(publicId, "publicId povided");
+        // console.log(profileLink, "publicId povided");
         const record = (0, otpStore_1.getOTP)(email);
         console.log("Stored OTP Record:", record);
         if (!record) {
@@ -89,7 +109,7 @@ const verifyOtp = async (req, res) => {
         }
         const { otp, password, expiresAt } = record;
         if (Date.now() > expiresAt) {
-            // deleteFile(prf);
+            // deleteFile(publicId);
             (0, otpStore_1.removeOTP)(email);
             return res.status(410).json({ message: "OTP expired" });
         }
@@ -108,8 +128,9 @@ const verifyOtp = async (req, res) => {
         const newUser = {
             name,
             email,
-            mediaUrl: prf,
-            birthdate: "",
+            publicId: publicId,
+            mediaUrl: profileLink,
+            birthdate: "1 / 1 / 2005",
             createdAt: index_1.admin.firestore.Timestamp.now(),
         };
         await index_1.db.collection('users').doc(user.uid).set(newUser);
