@@ -31,6 +31,7 @@ router.post("/", upload.single("file"), (req: Request, res: Response) => {
     console.log("fike ");
     if (!req.file) return res.status(400).json({ message: "No file uploaded" });
     console.log("file submitted");
+    console.log("sdzf");
     console.log(req.file.path, "kxknc");
     res.json({
         message: "File uploaded successfully",
