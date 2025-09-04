@@ -117,6 +117,7 @@ export const verifyOtp = async (req: any, res: any) => {
       name,
       email,
       mediaUrl: prf,
+      birthdate: "",
       createdAt: admin.firestore.Timestamp.now(),
     };
     await db.collection('users').doc(user.uid).set(newUser);

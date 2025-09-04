@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import otpRouter from './routes/otpRoutes';
 import friendRouter from './routes/friends';
 import userRouter from './routes/user';
+import deleteRouter from './routes/delete'
 import roomRouter from './routes/room';
 import groupRouter from './routes/group';
 import { verifyToken } from './middlewares/user';
@@ -39,8 +40,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/upload', uploadRouter);
-app.use('api/deleteFile', uploadRouter);
-
+// app.use('api/deleteFile', uploadRouter);
+app.use('/api/file', deleteRouter);
 app.use('/api/otp', otpRouter);
 app.use('/api/friends', verifyToken, friendRouter);
 app.use('/api/user', userRouter);

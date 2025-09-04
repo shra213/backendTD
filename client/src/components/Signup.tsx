@@ -41,7 +41,8 @@ const Signup: React.FC = () => {
       const uploadData = await uploadRes.json();
       const fileUrl = uploadData.fileUrl;
       localStorage.setItem("publicId", uploadData.publicId);
-      setProfilePic(fileUrl);
+      //@ts-ignore
+      setProfilePic(URL.createObjectURL(file));
       localStorage.setItem("prf", fileUrl);
       console.log(fileUrl);
     } catch (e) {

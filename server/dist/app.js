@@ -11,6 +11,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const otpRoutes_1 = __importDefault(require("./routes/otpRoutes"));
 const friends_1 = __importDefault(require("./routes/friends"));
 const user_1 = __importDefault(require("./routes/user"));
+const delete_1 = __importDefault(require("./routes/delete"));
 const room_1 = __importDefault(require("./routes/room"));
 const group_1 = __importDefault(require("./routes/group"));
 const user_2 = require("./middlewares/user");
@@ -37,6 +38,8 @@ app.get('/', (req, res) => {
     res.send('truth & dare Api running');
 });
 app.use('/api/upload', upload_1.default);
+// app.use('api/deleteFile', uploadRouter);
+app.use('/api/file', delete_1.default);
 app.use('/api/otp', otpRoutes_1.default);
 app.use('/api/friends', user_2.verifyToken, friends_1.default);
 app.use('/api/user', user_1.default);

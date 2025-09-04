@@ -1,4 +1,4 @@
-import {db } from "../firebase";
+import { db } from "../firebase";
 
 export const getMe = async (req: any, res: any) => {
     console.log(req.user);

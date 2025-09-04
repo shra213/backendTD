@@ -9,6 +9,7 @@ const otpStore_1 = require("./otpStore");
 const index_1 = require("../firebase/index");
 const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+// import { deleteFile } from "../routes/deleteFile";
 dotenv_1.default.config();
 const zod_1 = __importDefault(require("zod"));
 const secret = process.env.JWT_SECRET;
@@ -74,6 +75,10 @@ const verifyOtp = async (req, res) => {
     try {
         const { email, otp: userOtp } = req.body;
         const name = req.body.name ? req.body.name : "shraddha chaudhari";
+        const prf = req.body.publicId;
+        if (!prf) {
+            return res.status(404).json({ msg: "prf is not provided" });
+        }
         if (!email || !userOtp) {
             return res.status(400).json({ message: 'Provide email and OTP' });
         }
@@ -84,6 +89,7 @@ const verifyOtp = async (req, res) => {
         }
         const { otp, password, expiresAt } = record;
         if (Date.now() > expiresAt) {
+            // deleteFile(prf);
             (0, otpStore_1.removeOTP)(email);
             return res.status(410).json({ message: "OTP expired" });
         }
@@ -102,6 +108,8 @@ const verifyOtp = async (req, res) => {
         const newUser = {
             name,
             email,
+            mediaUrl: prf,
+            birthdate: "",
             createdAt: index_1.admin.firestore.Timestamp.now(),
         };
         await index_1.db.collection('users').doc(user.uid).set(newUser);

@@ -10,7 +10,7 @@ export function saveOTP(email: string, otp: string, password: string): void {
   otpMap.set(email, {
     otp,
     password,
-    expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes
+    expiresAt: Date.now() + 10 * 60 * 1000, // 5 minutes
   });
 }
 export function updateOtp(email: string, newOtp: string): boolean {

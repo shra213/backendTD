@@ -9,7 +9,7 @@ function saveOTP(email, otp, password) {
     otpMap.set(email, {
         otp,
         password,
-        expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes
+        expiresAt: Date.now() + 10 * 60 * 1000, // 5 minutes
     });
 }
 function updateOtp(email, newOtp) {
