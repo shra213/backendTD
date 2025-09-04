@@ -26,9 +26,9 @@ const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
     }),
 });
 const upload = (0, multer_1.default)({ storage });
-// Upload single file
 router.post("/", upload.single("file"), (req, res) => {
     console.log("encounter file changing");
+    console.log("fike ");
     if (!req.file)
         return res.status(400).json({ message: "No file uploaded" });
     console.log("file submitted");
