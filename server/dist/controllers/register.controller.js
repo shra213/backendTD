@@ -92,11 +92,11 @@ const verifyOtp = async (req, res) => {
     try {
         const { email, otp: userOtp } = req.body;
         const name = req.body.name ? req.body.name : "shraddha chaudhari";
-        const publicId = req.body.publicId;
+        const publicId = req.body.publicId || "";
         const profileLink = req.body.profile || "";
-        if (!publicId) {
-            return res.status(404).json({ msg: "publicId is not provided" });
-        }
+        // if (!publicId) {
+        //   return res.status(404).json({ msg: "publicId is not provided" });
+        // }
         if (!email || !userOtp) {
             return res.status(400).json({ message: 'Provide email and OTP' });
         }
